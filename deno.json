@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "dev": "deno run --watch bloom.ts"
+  },
+  "fmt": {
+    "lineWidth": 120,
+    "indentWidth": 4
+  }
+}
+
