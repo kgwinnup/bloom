@@ -1,7 +1,7 @@
 {
   "name": "@kgwinnup/bloom",
   "description": "Bloom filter implementation in pure typescript",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "exports": "./mod.ts",
   "tasks": {
     "dev": "deno run --watch bloom.ts"
