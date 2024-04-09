@@ -17,6 +17,24 @@ Deno.test("should insert and lookup in a filter", () => {
     assertEquals(filter.lookup(uint8array), true);
 });
 
+Deno.test("should only have k non-zero buckets with 1 item inserted", () => {
+    const filter = new Bloom(4000, 0.0000001);
+    const input = "hello world";
+    const encoder = new TextEncoder();
+    const uint8array = encoder.encode(input);
+    filter.insert(uint8array);
+
+    // only k buckets should be non-zero
+    let count = 0;
+    for (let i = 0; i < filter.filter.length; i++) {
+        if (filter.filter[i] > 0) {
+            count++;
+        }
+    }
+
+    assertEquals(filter.k, count);
+});
+
 Deno.test("should not find random inputs in the filter", () => {
     const filter = new Bloom(4000, 0.0000001);
     const input = "hello world";
