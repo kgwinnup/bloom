@@ -1,8 +1,8 @@
 # Bloom filter
 
-[![JSR](https://jsr.io/badges/@kgwinnup/tlsh)](https://jsr.io/@kgwinnup/tlsh)
+[![JSR](https://jsr.io/badges/@kgwinnup/bloom)](https://jsr.io/@kgwinnup/bloom)
 
-This is a standard bloom filter written in typescript. 
+This is a standard bloom filter written in typescript.
 
 # Usage
 
