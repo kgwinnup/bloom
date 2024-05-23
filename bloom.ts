@@ -1,4 +1,4 @@
-import { Murmur3 } from "./murmur3.ts";
+import { hash32 } from "./murmur3.ts";
 
 /**
  * BucketInfo is returned by the buckets function and represents the byte index in the filter and the position within
@@ -100,7 +100,7 @@ export class Bloom {
         const out = [];
 
         for (let i = 0; i < this.k; i++) {
-            const sum = Murmur3.hash32(input, i);
+            const sum = hash32(input, i);
             const newindex = sum % this.size;
             out.push({ index: Math.floor(newindex / 8), position: Math.floor(newindex % 8) });
         }
