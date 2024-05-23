@@ -4,7 +4,7 @@ import { hash32 } from "./murmur3.ts";
  * BucketInfo is returned by the buckets function and represents the byte index in the filter and the position within
  * that byte
  */
-type BucketInfo = { index: number; position: number };
+type BucketInfo = [ index: number, position: number ];
 
 /**
  * uint8ArrayToNumber converts a Uint8array to a javascript number
@@ -97,15 +97,16 @@ export class Bloom {
      * @return an array of which bucket and position the bit is in
      */
     private buckets(input: Uint8Array): Array<BucketInfo> {
-        const out = [];
 
-        for (let i = 0; i < this.k; i++) {
+        return Array.from({ length: this.k }, (_, i) => {
+
             const sum = hash32(input, i);
             const newindex = sum % this.size;
-            out.push({ index: Math.floor(newindex / 8), position: Math.floor(newindex % 8) });
-        }
 
-        return out;
+            return [ Math.floor(newindex / 8), Math.floor(newindex % 8) ];
+
+        });
+
     }
 
     /**
@@ -113,19 +114,23 @@ export class Bloom {
      * @param input is the raw bytes array of the thing to be placed in the filter
      */
     public insert(input: Uint8Array) {
-        const buckets = this.buckets(input);
-        for (let i = 0; i < buckets.length; i++) {
-            const bit = 1 << buckets[i].position;
-            this.filter[buckets[i].index] |= bit;
+
+        for (const [ index, position ] of this.buckets(input)) {
+
+            const bit = 1 << position;
+
+            this.filter[index] |= bit;
+
         }
+
     }
 
     /** lookup returns true if the input is in the filter, false otherwise */
     public lookup(input: Uint8Array): boolean {
         const buckets = this.buckets(input);
-        for (let i = 0; i < buckets.length; i++) {
-            const bit = 1 << buckets[i].position;
-            if ((this.filter[buckets[i].index] & bit) == 0) {
+        for (const [ index, position ] of buckets) {
+            const bit = 1 << position;
+            if ((this.filter[index] & bit) === 0) {
                 return false;
             }
         }
