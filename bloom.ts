@@ -80,10 +80,7 @@ export class Bloom {
      * @param Bloom filter object
      */
     static from(input: Uint8Array): Bloom {
-        const k = uint8ArrayToNumber(input.subarray(0, 8));
-        const size = uint8ArrayToNumber(input.subarray(8, 16));
-        const filter = input.subarray(16, size + 16);
-        return new Bloom(0, 0, { filter, k, size });
+        return new Bloom(0, 0, from_dump(input));
     }
 
     /**
@@ -161,5 +158,12 @@ function calc(n: number, fp: number) {
 
     return { k, size };
 
+}
+
+function from_dump(input: Uint8Array) {
+    const k = uint8ArrayToNumber(input.subarray(0, 8));
+    const size = uint8ArrayToNumber(input.subarray(8, 16));
+    const filter = input.subarray(16, size + 16);
+    return { filter, k, size };
 }
 
