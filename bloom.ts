@@ -12,11 +12,7 @@ type BucketInfo = { index: number; position: number };
  * @returns a javascript number
  */
 function uint8ArrayToNumber(input: Uint8Array) {
-    let num = 0;
-    for (let i = 0; i < 8; i++) {
-        num += Math.pow(256, i) * input[i];
-    }
-    return num;
+    return Array.from(input).reduceRight((acc, x) => (acc << 8) + x, 0);
 }
 
 /**
