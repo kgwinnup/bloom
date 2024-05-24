@@ -127,13 +127,14 @@ export class Bloom {
 
     /** lookup returns true if the input is in the filter, false otherwise */
     public lookup(input: Uint8Array): boolean {
-        const buckets = this.buckets(input);
-        for (const [ index, position ] of buckets) {
+
+        return this.buckets(input).some(([ index, position ]) => {
+
             const bit = 1 << position;
-            if ((this.filter[index] & bit) === 0) {
-                return false;
-            }
-        }
-        return true;
+
+            return (this.filter[index] & bit) !== 0;
+
+        });
+
     }
 }
