@@ -40,11 +40,11 @@ function numberToUint8Array(n: number): Uint8Array {
 type BloomParams = { filter: Uint8Array; k: number; size: number };
 
 export class Bloom {
-    filter: Uint8Array = new Uint8Array(0);
+    public readonly filter: Uint8Array;
     // number of buckets to check for the hash
-    k: number = 0;
+    readonly k: number;
     // total size in bytes of the bloom filter
-    size: number = 0;
+    readonly size: number;
 
     readonly #buckets;
 
