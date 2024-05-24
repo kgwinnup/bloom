@@ -68,20 +68,12 @@ export class Bloom {
     }
 
     /**
-     * dump will conver the entire bloom filter to a Uint8Array for storing. This will contain all information in
+     * dump will convert the entire bloom filter to a Uint8Array for storing. This will contain all information in
      * order to re-hydrate this bloom filter using the `from` static function.
      * @returns the byte representation of the bloom filter.
      */
     public dump(): Uint8Array {
-        const k = numberToUint8Array(this.k);
-        const size = numberToUint8Array(this.size);
-
-        const buf = new Uint8Array(8 + 8 + this.size).fill(0);
-        buf.set(k, 0);
-        buf.set(size, 8);
-        buf.set(this.filter, 16);
-
-        return buf;
+        return mk_dump(this, this.filter);
     }
 
     /**
@@ -150,3 +142,16 @@ function gen_buckets(length: number, size: number) {
     }
 
 }
+
+function mk_dump(that: { k: number, size: number }, filter: Uint8Array) {
+    const k = numberToUint8Array(that.k);
+    const size = numberToUint8Array(that.size);
+
+    const buf = new Uint8Array(8 + 8 + that.size).fill(0);
+    buf.set(k, 0);
+    buf.set(size, 8);
+    buf.set(filter, 16);
+
+    return buf;
+}
+
