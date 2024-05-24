@@ -46,11 +46,14 @@ export class Bloom {
     // total size in bytes of the bloom filter
     size: number = 0;
 
+    readonly #buckets;
+
     constructor(n: number, fp: number, bloomParams?: BloomParams) {
         if (bloomParams) {
             this.filter = bloomParams.filter;
             this.k = bloomParams.k;
             this.size = bloomParams.size;
+            this.#buckets = gen_buckets(this.k, this.size);
             return;
         }
 
@@ -61,6 +64,7 @@ export class Bloom {
         this.filter = new Uint8Array(size).fill(0);
         this.k = Math.floor(k);
         this.size = size;
+        this.#buckets = gen_buckets(this.k, this.size);
     }
 
     /**
@@ -93,33 +97,12 @@ export class Bloom {
     }
 
     /**
-     * buckets hashes k times and popuate those buckets that get hit
-     * @param input is the thing to be placed into the bloom filter
-     * @return an array of which bucket and position the bit is in
-     */
-    private buckets(input: Uint8Array): Array<BucketInfo> {
-
-        return Array.from({ length: this.k }, (_, i) => {
-
-            const sum = hash32(input, i);
-            const newindex = sum % this.size;
-
-            return {
-                index: Math.floor(newindex / 8),
-                position: Math.floor(newindex % 8),
-            };
-
-        });
-
-    }
-
-    /**
      * insert will flip all the bits to 1 corresponding to the input hash in the bloom filter.
      * @param input is the raw bytes array of the thing to be placed in the filter
      */
     public insert(input: Uint8Array) {
 
-        for (const { index, position } of this.buckets(input)) {
+        for (const { index, position } of this.#buckets(input)) {
 
             const bit = 1 << position;
 
@@ -132,7 +115,7 @@ export class Bloom {
     /** lookup returns true if the input is in the filter, false otherwise */
     public lookup(input: Uint8Array): boolean {
 
-        return this.buckets(input).some(({ index, position }) => {
+        return this.#buckets(input).some(({ index, position }) => {
 
             const bit = 1 << position;
 
@@ -141,4 +124,29 @@ export class Bloom {
         });
 
     }
+}
+
+function gen_buckets(length: number, size: number) {
+
+    /**
+     * buckets hashes k times and populate those buckets that get hit
+     * @param input is the thing to be placed into the bloom filter
+     * @return an array of which bucket and position the bit is in
+     */
+    return function(input: Uint8Array): Array<BucketInfo> {
+
+        return Array.from({ length }, (_, i) => {
+
+            const sum = hash32(input, i);
+            const newindex = sum % size;
+
+            return {
+                index: Math.floor(newindex / 8),
+                position: Math.floor(newindex % 8),
+            };
+
+        });
+
+    }
+
 }
