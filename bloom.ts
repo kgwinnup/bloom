@@ -57,14 +57,12 @@ export class Bloom {
             return;
         }
 
-        const m = Math.ceil(n * Math.log(fp)) / Math.log(1.0 / Math.pow(2, Math.log(2)));
-        const k = Math.round((m / n) * Math.log(2));
-        const size = Math.floor(Math.ceil((m + 8.0) / 8.0));
+        const { k, size } = calc(n, fp);
 
-        this.filter = new Uint8Array(size).fill(0);
-        this.k = Math.floor(k);
+        this.k = k;
         this.size = size;
-        this.#buckets = gen_buckets(this.k, this.size);
+        this.#buckets = gen_buckets(k, size);
+        this.filter = new Uint8Array(size).fill(0);
     }
 
     /**
@@ -153,5 +151,15 @@ function mk_dump(that: { k: number, size: number }, filter: Uint8Array) {
     buf.set(filter, 16);
 
     return buf;
+}
+
+function calc(n: number, fp: number) {
+
+    const m = Math.ceil(n * Math.log(fp)) / Math.log(1.0 / Math.pow(2, Math.log(2)));
+    const k = Math.round((m / n) * Math.log(2));
+    const size = Math.floor(Math.ceil((m + 8.0) / 8.0));
+
+    return { k, size };
+
 }
 
