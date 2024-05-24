@@ -79,12 +79,17 @@ export class Bloom {
      * @return a Uint8Array representation of the number
      */
     private numberToUint8Array(n: number): Uint8Array {
-        const out = new Uint8Array(8);
-        for (let i = 0; i < 8; i++) {
-            out[i] = n % 256;
-            n = Math.floor(n / 256);
-        }
-        return out;
+
+        const result = Array.from({ length: 8 }).reduce(({ acc, x }) => ({
+            acc: acc.concat(x & 0xFF),
+            x: x >> 8,
+        }), {
+            acc: [],
+            x: n,
+        });
+
+        return Uint8Array.from(result.acc);
+
     }
 
     /**
