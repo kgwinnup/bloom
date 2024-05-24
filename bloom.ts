@@ -4,7 +4,7 @@ import { hash32 } from "./murmur3.ts";
  * BucketInfo is returned by the buckets function and represents the byte index in the filter and the position within
  * that byte
  */
-type BucketInfo = [ index: number, position: number ];
+type BucketInfo = { index: number; position: number };
 
 /**
  * uint8ArrayToNumber converts a Uint8array to a javascript number
@@ -103,7 +103,10 @@ export class Bloom {
             const sum = hash32(input, i);
             const newindex = sum % this.size;
 
-            return [ Math.floor(newindex / 8), Math.floor(newindex % 8) ];
+            return {
+                index: Math.floor(newindex / 8),
+                position: Math.floor(newindex % 8),
+            };
 
         });
 
@@ -115,7 +118,7 @@ export class Bloom {
      */
     public insert(input: Uint8Array) {
 
-        for (const [ index, position ] of this.buckets(input)) {
+        for (const { index, position } of this.buckets(input)) {
 
             const bit = 1 << position;
 
@@ -128,7 +131,7 @@ export class Bloom {
     /** lookup returns true if the input is in the filter, false otherwise */
     public lookup(input: Uint8Array): boolean {
 
-        return this.buckets(input).some(([ index, position ]) => {
+        return this.buckets(input).some(({ index, position }) => {
 
             const bit = 1 << position;
 
