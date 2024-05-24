@@ -16,6 +16,25 @@ function uint8ArrayToNumber(input: Uint8Array) {
 }
 
 /**
+ * numberToUint8Array converts a number to a uint8array
+ * @param n, the number to be converted
+ * @return a Uint8Array representation of the number
+ */
+function numberToUint8Array(n: number): Uint8Array {
+
+    const result = Array.from({ length: 8 }).reduce(({ acc, x }) => ({
+        acc: acc.concat(x & 0xFF),
+        x: x >> 8,
+    }), {
+        acc: [],
+        x: n,
+    });
+
+    return Uint8Array.from(result.acc);
+
+}
+
+/**
  * type to allow the Bloom constructor to initialize from a file
  */
 type BloomParams = { filter: Uint8Array; k: number; size: number };
@@ -50,8 +69,8 @@ export class Bloom {
      * @returns the byte representation of the bloom filter.
      */
     public dump(): Uint8Array {
-        const k = this.numberToUint8Array(this.k);
-        const size = this.numberToUint8Array(this.size);
+        const k = numberToUint8Array(this.k);
+        const size = numberToUint8Array(this.size);
 
         const buf = new Uint8Array(8 + 8 + this.size).fill(0);
         buf.set(k, 0);
@@ -71,25 +90,6 @@ export class Bloom {
         const size = uint8ArrayToNumber(input.subarray(8, 16));
         const filter = input.subarray(16, size + 16);
         return new Bloom(0, 0, { filter, k, size });
-    }
-
-    /**
-     * numberToUint8Array converts a number to a uint8array
-     * @param n, the number to be converted
-     * @return a Uint8Array representation of the number
-     */
-    private numberToUint8Array(n: number): Uint8Array {
-
-        const result = Array.from({ length: 8 }).reduce(({ acc, x }) => ({
-            acc: acc.concat(x & 0xFF),
-            x: x >> 8,
-        }), {
-            acc: [],
-            x: n,
-        });
-
-        return Uint8Array.from(result.acc);
-
     }
 
     /**
