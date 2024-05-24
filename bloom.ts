@@ -70,7 +70,7 @@ export class Bloom {
         const k = uint8ArrayToNumber(input.subarray(0, 8));
         const size = uint8ArrayToNumber(input.subarray(8, 16));
         const filter = input.subarray(16, size + 16);
-        return new Bloom(0, 0, { filter: filter, k: k, size: size });
+        return new Bloom(0, 0, { filter, k, size });
     }
 
     /**
