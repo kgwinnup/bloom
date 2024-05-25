@@ -95,18 +95,11 @@ function gen_bloom ({ k, size, raw }: {
         batch_insert (inputs) {
 
             // @ts-ignore https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator/reduce
-            if (typeof inputs.reduce === 'function') {
+            const raw =       inputs .reduce?.(merge, filter)
+                ?? Array.from(inputs).reduce  (merge, filter)
+            ;
 
-                return gen_bloom({ k, size,
-                    // @ts-ignore same as above
-                    raw: inputs.reduce(merge, filter),
-                });
-
-            }
-
-            return gen_bloom({ k, size,
-                raw: Array.from(inputs).reduce(merge, filter),
-            });
+            return gen_bloom({ k, size, raw });
 
         },
 
