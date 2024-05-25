@@ -7,6 +7,13 @@
     "dev": "deno run --watch bloom.ts"
   },
   "lock": false,
+  "publish": {
+    "exclude": [
+      "./.github",
+      ".editorconfig",
+      "deno.lock"
+    ]
+  },
   "fmt": {
     "lineWidth": 120,
     "indentWidth": 4
