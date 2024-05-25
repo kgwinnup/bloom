@@ -78,8 +78,9 @@ function gen_bloom ({ k, size, raw }: {
             return buckets(input).some(({ index, position }) => {
 
                 const bit = 1 << position;
+                const value = at(filter, index) & bit;
 
-                return (filter[index] & bit) !== 0;
+                return value !== 0;
 
             });
 
@@ -121,6 +122,16 @@ function gen_bloom ({ k, size, raw }: {
 
 
 
+function at (buf: Uint8Array, index: number) {
+
+    return buf.at?.(index) ?? buf[index];
+
+}
+
+
+
+
+
 function lift (buckets: (_: Uint8Array) => ReadonlyArray<BucketInfo>) {
 
     return function (filter: Uint8Array, input: Uint8Array)  {
@@ -128,11 +139,10 @@ function lift (buckets: (_: Uint8Array) => ReadonlyArray<BucketInfo>) {
         return buckets(input).reduce((acc, { index, position }) => {
 
             const bit = 1 << position;
-            const item = acc.at?.(index) ?? acc[index];
-            const updates = item | bit;
+            const value = at(acc, index) | bit;
 
             if (typeof acc.with === 'function') {
-                return acc.with(index, updates);
+                return acc.with(index, value);
             }
 
             const clone = typeof structuredClone === 'function'
@@ -140,7 +150,7 @@ function lift (buckets: (_: Uint8Array) => ReadonlyArray<BucketInfo>) {
                 : Uint8Array.from(acc)
             ;
 
-            clone[index] = updates;
+            clone[index] = value;
 
             return clone;
 
