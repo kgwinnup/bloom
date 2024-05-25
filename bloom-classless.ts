@@ -32,9 +32,7 @@ interface BloomClassless {
 
 export function bloom_by (n: number, fp: number): BloomClassless {
 
-    const { k, size } = calc(n, fp);
-
-    return gen_bloom({ k, size });
+    return gen_bloom(calc(n, fp));
 
 }
 
@@ -44,9 +42,7 @@ export function bloom_by (n: number, fp: number): BloomClassless {
 
 export function bloom_from (dump: Uint8Array): BloomClassless {
 
-    const { k, size, filter: raw } = from_dump(dump);
-
-    return gen_bloom({ k, size, raw });
+    return gen_bloom(from_dump(dump));
 
 }
 
@@ -54,15 +50,15 @@ export function bloom_from (dump: Uint8Array): BloomClassless {
 
 
 
-function gen_bloom ({ k, size, raw }: {
+function gen_bloom ({ k, size, filter }: {
 
         k: number,
         size: number,
-        raw?: Uint8Array,
+        filter?: Uint8Array,
 
 }): BloomClassless {
 
-    const filter = raw ?? new Uint8Array(size).fill(0);
+    const store = filter ?? new Uint8Array(size).fill(0);
 
     const buckets = gen_buckets(k, size);
     const append = lift(buckets);
@@ -78,7 +74,7 @@ function gen_bloom ({ k, size, raw }: {
             return buckets(input).some(({ index, position }) => {
 
                 const bit = 1 << position;
-                const value = at(filter, index) & bit;
+                const value = at(store, index) & bit;
 
                 return value !== 0;
 
@@ -88,18 +84,18 @@ function gen_bloom ({ k, size, raw }: {
 
         insert (input) {
 
-            return gen_bloom({ k, size, raw: append(filter, input) });
+            return gen_bloom({ k, size, filter: append(store, input) });
 
         },
 
         batch_insert (inputs) {
 
-            return gen_bloom({ k, size, raw: fold(append, filter, inputs) });
+            return gen_bloom({ k, size, filter: fold(append, store, inputs) });
 
         },
 
         dump () {
-            return mk_dump({ k, size }, filter);
+            return mk_dump({ k, size }, store);
         },
 
     };
