@@ -115,6 +115,27 @@ function gen_bloom ({ k, size, raw }: {
 
 
 
+function lift (buckets: (_: Uint8Array) => ReadonlyArray<BucketInfo>) {
+
+    return function (filter: Uint8Array, input: Uint8Array)  {
+
+        return buckets(input).reduce((acc, { index, position }) => {
+
+            const bit = 1 << position;
+            const value = at(acc, index) | bit;
+
+            return update(acc, { index, value });
+
+        }, filter);
+
+    };
+
+}
+
+
+
+
+
 function at (buf: Uint8Array, index: number) {
 
     return buf.at?.(index) ?? buf[index];
@@ -144,27 +165,6 @@ function update (buf: Uint8Array, { index, value }: {
     clone[index] = value;
 
     return clone;
-
-}
-
-
-
-
-
-function lift (buckets: (_: Uint8Array) => ReadonlyArray<BucketInfo>) {
-
-    return function (filter: Uint8Array, input: Uint8Array)  {
-
-        return buckets(input).reduce((acc, { index, position }) => {
-
-            const bit = 1 << position;
-            const value = at(acc, index) | bit;
-
-            return update(acc, { index, value });
-
-        }, filter);
-
-    };
 
 }
 
