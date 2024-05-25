@@ -138,6 +138,16 @@ export function gen_buckets(length: number, size: number) {
 
 }
 
+export function calc(n: number, fp: number) {
+
+    const m = Math.ceil(n * Math.log(fp)) / Math.log(1.0 / Math.pow(2, Math.log(2)));
+    const k = Math.round((m / n) * Math.log(2));
+    const size = Math.floor(Math.ceil((m + 8.0) / 8.0));
+
+    return { k, size };
+
+}
+
 export function gen_dump(that: { k: number, size: number, filter: Uint8Array }) {
     const k = numberToUint8Array(that.k);
     const size = numberToUint8Array(that.size);
@@ -148,16 +158,6 @@ export function gen_dump(that: { k: number, size: number, filter: Uint8Array }) 
     buf.set(that.filter, 16);
 
     return buf;
-}
-
-export function calc(n: number, fp: number) {
-
-    const m = Math.ceil(n * Math.log(fp)) / Math.log(1.0 / Math.pow(2, Math.log(2)));
-    const k = Math.round((m / n) * Math.log(2));
-    const size = Math.floor(Math.ceil((m + 8.0) / 8.0));
-
-    return { k, size };
-
 }
 
 export function from_dump(input: Uint8Array) {
