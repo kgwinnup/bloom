@@ -114,14 +114,14 @@ function lift (buckets: (_: Uint8Array) => ReadonlyArray<BucketInfo>) {
 
     return function (filter: Uint8Array, input: Uint8Array)  {
 
-        return buckets(input).reduce((acc, { index, position }) => {
+        return fold(function (acc, { index, position }) {
 
             const bit = 1 << position;
             const value = at(acc, index) | bit;
 
             return update(acc, { index, value });
 
-        }, filter);
+        }, filter, buckets(input));
 
     };
 
