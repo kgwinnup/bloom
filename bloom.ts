@@ -71,7 +71,7 @@ export class Bloom {
      * @returns the byte representation of the bloom filter.
      */
     public dump(): Uint8Array {
-        return mk_dump(this, this.filter);
+        return gen_dump(this);
     }
 
     /**
@@ -138,14 +138,14 @@ export function gen_buckets(length: number, size: number) {
 
 }
 
-export function mk_dump(that: { k: number, size: number }, filter: Uint8Array) {
+export function gen_dump(that: { k: number, size: number, filter: Uint8Array }) {
     const k = numberToUint8Array(that.k);
     const size = numberToUint8Array(that.size);
 
     const buf = new Uint8Array(8 + 8 + that.size).fill(0);
     buf.set(k, 0);
     buf.set(size, 8);
-    buf.set(filter, 16);
+    buf.set(that.filter, 16);
 
     return buf;
 }

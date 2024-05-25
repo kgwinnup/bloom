@@ -2,7 +2,7 @@ import {
     calc,
     from_dump,
     gen_buckets,
-    mk_dump,
+    gen_dump,
     type BucketInfo,
 } from "./bloom.ts";
 
@@ -95,7 +95,7 @@ function gen_bloom ({ k, size, filter }: {
         },
 
         dump () {
-            return mk_dump({ k, size }, store);
+            return gen_dump({ k, size, filter: store });
         },
 
     };
