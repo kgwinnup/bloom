@@ -94,12 +94,7 @@ function gen_bloom ({ k, size, raw }: {
 
         batch_insert (inputs) {
 
-            // @ts-ignore https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator/reduce
-            const raw =       inputs .reduce?.(merge, filter)
-                ?? Array.from(inputs).reduce  (merge, filter)
-            ;
-
-            return gen_bloom({ k, size, raw });
+            return gen_bloom({ k, size, raw: fold(merge, filter, inputs) });
 
         },
 
@@ -165,6 +160,23 @@ function update (buf: Uint8Array, { index, value }: {
     clone[index] = value;
 
     return clone;
+
+}
+
+
+
+
+
+function fold <A, B, C> (
+
+        f: (acc: A, x: B) => C,
+        x: A,
+        xs: Iterable<B>,
+
+): C {
+
+    // @ts-ignore https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator/reduce
+    return xs.reduce?.(f, x) ?? Array.from(xs).reduce(f, x);
 
 }
 
