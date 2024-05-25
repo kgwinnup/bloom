@@ -125,6 +125,32 @@ function at (buf: Uint8Array, index: number) {
 
 
 
+function update (buf: Uint8Array, { index, value }: {
+
+        index: number,
+        value: number,
+
+}) {
+
+    if (typeof buf.with === 'function') {
+        return buf.with(index, value);
+    }
+
+    const clone = typeof structuredClone === 'function'
+        ? structuredClone(buf, { transfer: [ buf.buffer ] })
+        : Uint8Array.from(buf)
+    ;
+
+    clone[index] = value;
+
+    return clone;
+
+}
+
+
+
+
+
 function lift (buckets: (_: Uint8Array) => ReadonlyArray<BucketInfo>) {
 
     return function (filter: Uint8Array, input: Uint8Array)  {
@@ -134,18 +160,7 @@ function lift (buckets: (_: Uint8Array) => ReadonlyArray<BucketInfo>) {
             const bit = 1 << position;
             const value = at(acc, index) | bit;
 
-            if (typeof acc.with === 'function') {
-                return acc.with(index, value);
-            }
-
-            const clone = typeof structuredClone === 'function'
-                ? structuredClone(acc, { transfer: [ acc.buffer ] })
-                : Uint8Array.from(acc)
-            ;
-
-            clone[index] = value;
-
-            return clone;
+            return update(acc, { index, value });
 
         }, filter);
 
