@@ -106,7 +106,7 @@ function gen_bloom ({ k, size, filter }: {
 
 
 
-function lift (buckets: (_: Uint8Array) => ReadonlyArray<BucketInfo>) {
+function lift (buckets: (_: Uint8Array) => Iterable<BucketInfo>) {
 
     return function (filter: Uint8Array, input: Uint8Array)  {
 
