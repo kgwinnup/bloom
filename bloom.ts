@@ -4,14 +4,14 @@ import { hash32 } from "./murmur3.ts";
  * BucketInfo is returned by the buckets function and represents the byte index in the filter and the position within
  * that byte
  */
-type BucketInfo = { index: number; position: number };
+export type BucketInfo = { index: number; position: number };
 
 /**
  * uint8ArrayToNumber converts a Uint8array to a javascript number
  * @param input array
  * @returns a javascript number
  */
-function uint8ArrayToNumber(input: Uint8Array) {
+export function uint8ArrayToNumber(input: Uint8Array) {
     return Array.from(input).reduceRight((acc, x) => (acc << 8) + x, 0);
 }
 
@@ -20,7 +20,7 @@ function uint8ArrayToNumber(input: Uint8Array) {
  * @param n, the number to be converted
  * @return a Uint8Array representation of the number
  */
-function numberToUint8Array(n: number): Uint8Array {
+export function numberToUint8Array(n: number): Uint8Array {
 
     const result = Array.from({ length: 8 }).reduce(({ acc, x }) => ({
         acc: acc.concat(x & 0xFF),
@@ -113,7 +113,7 @@ export class Bloom {
     }
 }
 
-function gen_buckets(length: number, size: number) {
+export function gen_buckets(length: number, size: number) {
 
     /**
      * buckets hashes k times and populate those buckets that get hit
@@ -138,7 +138,7 @@ function gen_buckets(length: number, size: number) {
 
 }
 
-function mk_dump(that: { k: number, size: number }, filter: Uint8Array) {
+export function mk_dump(that: { k: number, size: number }, filter: Uint8Array) {
     const k = numberToUint8Array(that.k);
     const size = numberToUint8Array(that.size);
 
@@ -150,7 +150,7 @@ function mk_dump(that: { k: number, size: number }, filter: Uint8Array) {
     return buf;
 }
 
-function calc(n: number, fp: number) {
+export function calc(n: number, fp: number) {
 
     const m = Math.ceil(n * Math.log(fp)) / Math.log(1.0 / Math.pow(2, Math.log(2)));
     const k = Math.round((m / n) * Math.log(2));
@@ -160,7 +160,7 @@ function calc(n: number, fp: number) {
 
 }
 
-function from_dump(input: Uint8Array) {
+export function from_dump(input: Uint8Array) {
     const k = uint8ArrayToNumber(input.subarray(0, 8));
     const size = uint8ArrayToNumber(input.subarray(8, 16));
     const filter = input.subarray(16, size + 16);
