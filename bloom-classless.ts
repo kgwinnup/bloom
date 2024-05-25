@@ -71,14 +71,14 @@ function gen_bloom ({ k, size, filter }: {
 
         lookup (input) {
 
-            return buckets(input).some(({ index, position }) => {
+            return some(function ({ index, position }) {
 
                 const bit = 1 << position;
                 const value = at(store, index) & bit;
 
                 return value !== 0;
 
-            });
+            }, buckets(input));
 
         },
 
@@ -156,6 +156,22 @@ function update (buf: Uint8Array, { index, value }: {
     clone[index] = value;
 
     return clone;
+
+}
+
+
+
+
+
+function some <T> (
+
+        f: (x: T) => boolean,
+        xs: Iterable<T>,
+
+): boolean {
+
+    // @ts-ignore https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator/some
+    return xs.some?.(f) ?? Array.from(xs).some(f);
 
 }
 
