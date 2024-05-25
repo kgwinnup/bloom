@@ -65,7 +65,7 @@ function gen_bloom ({ k, size, raw }: {
     const filter = raw ?? new Uint8Array(size).fill(0);
 
     const buckets = gen_buckets(k, size);
-    const merge = lift(buckets);
+    const append = lift(buckets);
 
     return {
 
@@ -88,13 +88,13 @@ function gen_bloom ({ k, size, raw }: {
 
         insert (input) {
 
-            return gen_bloom({ k, size, raw: merge(filter, input) });
+            return gen_bloom({ k, size, raw: append(filter, input) });
 
         },
 
         batch_insert (inputs) {
 
-            return gen_bloom({ k, size, raw: fold(merge, filter, inputs) });
+            return gen_bloom({ k, size, raw: fold(append, filter, inputs) });
 
         },
 
