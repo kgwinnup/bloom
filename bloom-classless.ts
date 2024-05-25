@@ -83,15 +83,11 @@ function gen_bloom ({ k, size, filter }: {
         },
 
         insert (input) {
-
             return gen_bloom({ k, size, filter: append(store, input) });
-
         },
 
         batch_insert (inputs) {
-
             return gen_bloom({ k, size, filter: fold(append, store, inputs) });
-
         },
 
         dump () {
