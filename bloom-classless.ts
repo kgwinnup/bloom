@@ -18,9 +18,9 @@ export interface BloomClassless {
 
     lookup (input: Uint8Array): boolean;
 
-    insert (input: Uint8Array): BloomClassless;
+                insert (input:               Uint8Array):          BloomClassless;
 
-    batch_insert (input: Iterable<Uint8Array>): BloomClassless;
+          batch_insert (input:      Iterable<Uint8Array>):         BloomClassless;
 
     async_batch_insert (input: AsyncIterable<Uint8Array>): Promise<BloomClassless>;
 
