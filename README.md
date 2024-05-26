@@ -5,6 +5,8 @@
 
 # Bloom filter <sup>(classless)</sup>
 
+[![JSR](https://jsr.io/badges/@imcotton/bloom)](https://jsr.io/@imcotton/bloom)
+
 
 
 
