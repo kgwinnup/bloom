@@ -20,7 +20,7 @@ export interface BloomClassless {
 
     insert (input: Uint8Array): BloomClassless;
 
-    batch_insert (inputs: Iterable<Uint8Array>): BloomClassless;
+    batch_insert (input: Iterable<Uint8Array>): BloomClassless;
 
     async_batch_insert (input: AsyncIterable<Uint8Array>): Promise<BloomClassless>;
 
@@ -88,8 +88,8 @@ function gen_bloom ({ k, size, filter }: {
             return gen_bloom({ k, size, filter: append(store, input) });
         },
 
-        batch_insert (inputs) {
-            return gen_bloom({ k, size, filter: fold(append, store, inputs) });
+        batch_insert (input) {
+            return gen_bloom({ k, size, filter: fold(append, store, input) });
         },
 
         async async_batch_insert (input) {
