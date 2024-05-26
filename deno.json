@@ -13,10 +13,6 @@
       ".editorconfig",
       "deno.lock"
     ]
-  },
-  "fmt": {
-    "lineWidth": 120,
-    "indentWidth": 4
   }
 }
 
