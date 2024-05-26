@@ -1,7 +1,10 @@
 > [!NOTE]
-> This is forked version from (https://jsr.io/@kgwinnup/bloom)
-> due to massive internal rewritten from **Class** to **functional**
-> implemntation.
+> This is a forked version of (https://jsr.io/@kgwinnup/bloom),
+> featuring significant internal rewrites from **class-based**
+> to **functional** implementation.
+>
+> Stick to the original unless you're specifically interested
+> in functional programming characteristics.
 
 # Bloom filter <sup>(classless)</sup>
 
@@ -11,21 +14,11 @@
 
 
 
-## different
-
-### create
-
-from:
+## create
 
 ```ts
-const filter1 = new Bloom(4000, 0.0000001);
-const filter2 = Bloom.from(filter1.dump());
-```
+const filter1 = bloom_by(4000, 1e-7);
 
-to:
-
-```ts
-const filter1 = bloom_by(4000, 0.0000001);
 const filter2 = bloom_from(filter1.dump());
 ```
 
@@ -33,18 +26,16 @@ const filter2 = bloom_from(filter1.dump());
 
 
 
-### insert
+## insert
 
-from:
-
-```ts
-filter.insert(item);
-```
-
-to:
+immutable updates
 
 ```ts
-filter = filter.insert(item); // immutable update
+const { insert, betch_insert } = bloom_by(4000, 1e-7);
+
+const filter1 = insert(item);
+
+const filter2 = betch_insert([ item, item ]);
 ```
 
 
