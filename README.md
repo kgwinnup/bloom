@@ -1,8 +1,7 @@
 > [!NOTE]
 > This is a forked version of (https://jsr.io/@kgwinnup/bloom),
 > featuring significant internal rewrites from **class-based**
-> to **functional** implementation.
->
+> to **functional** implementation.\
 > Stick to the original unless you're specifically interested
 > in functional programming characteristics.
 
@@ -31,11 +30,11 @@ const filter2 = bloom_from(filter1.dump());
 immutable updates
 
 ```ts
-const { insert, batch_insert } = bloom_by(4000, 1e-7);
+const filter = bloom_by(4000, 1e-7);
 
-const filter1 = insert(item);
+const filter1 = filter.insert(item);
 
-const filter2 = batch_insert([ item, item ]);
+const filter2 = filter.batch_insert([ item, item ]);
 ```
 
 
