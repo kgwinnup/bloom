@@ -1,10 +1,18 @@
 {
-  "name": "@kgwinnup/bloom",
+  "name": "@imcotton/bloom",
   "description": "Bloom filter implementation in pure typescript",
-  "version": "1.0.1",
+  "version": "101.0.1",
   "exports": "./mod.ts",
   "tasks": {
     "dev": "deno run --watch bloom.ts"
+  },
+  "lock": false,
+  "publish": {
+    "exclude": [
+      "./.github",
+      ".editorconfig",
+      "deno.lock"
+    ]
   },
   "fmt": {
     "lineWidth": 120,
