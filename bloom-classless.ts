@@ -10,7 +10,7 @@ import {
 
 
 
-interface BloomClassless {
+export interface BloomClassless {
 
     readonly k: number;
 
