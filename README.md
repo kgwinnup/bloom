@@ -31,11 +31,11 @@ const filter2 = bloom_from(filter1.dump());
 immutable updates
 
 ```ts
-const { insert, betch_insert } = bloom_by(4000, 1e-7);
+const { insert, batch_insert } = bloom_by(4000, 1e-7);
 
 const filter1 = insert(item);
 
-const filter2 = betch_insert([ item, item ]);
+const filter2 = batch_insert([ item, item ]);
 ```
 
 
