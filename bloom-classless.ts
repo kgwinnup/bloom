@@ -85,15 +85,27 @@ function gen_bloom ({ k, size, filter }: {
         },
 
         insert (input) {
-            return gen_bloom({ k, size, filter: append(store, input) });
+
+            return gen_bloom({ k, size,
+                filter: append(store, input),
+            });
+
         },
 
         batch_insert (input) {
-            return gen_bloom({ k, size, filter: fold(append, store, input) });
+
+            return gen_bloom({ k, size,
+                filter: fold(append, store, input),
+            });
+
         },
 
         async async_batch_insert (input) {
-            return gen_bloom({ k, size, filter: await async_fold(append, store, input) });
+
+            return gen_bloom({ k, size,
+                filter: await async_fold(append, store, input),
+            });
+
         },
 
         dump () {
