@@ -188,3 +188,25 @@ function fold <A, B, C> (
 
 }
 
+
+
+
+
+async function async_fold <A, B> (
+
+        f: (acc: A, x: B) => A,
+        x: A,
+        xs: AsyncIterable<B>,
+
+): Promise<A> {
+
+    let result = x;
+
+    for await (const item of xs) {
+        result = f(result, item);
+    }
+
+    return result;
+
+}
+
