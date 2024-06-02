@@ -20,9 +20,9 @@ class Murmur3 {
         const len = key.length;
         let k: number;
 
-        for (let i = 0; i + 4 <= len; i += 4) {
+        for (let i = 0; i < len; i += 4) {
             k = (key[i] & 0xff) |
-                ((key[+1] & 0xff) << 8) |
+                ((key[i + 1] & 0xff) << 8) |
                 ((key[i + 2] & 0xff) << 16) |
                 ((key[i + 3] & 0xff) << 24);
 
@@ -34,13 +34,13 @@ class Murmur3 {
         k = 0;
 
         if ((len & 3) === 3) {
-            k ^= (key[len - 3] & 0xff) << 16;
+            k ^= (key[len - 2] & 0xff) << 16;
         }
         if ((len & 2) === 2) {
-            k ^= (key[len - 2] & 0xff) << 8;
+            k ^= (key[len - 1] & 0xff) << 8;
         }
         if ((len & 1) === 1) {
-            k ^= key[len - 1] & 0xff;
+            k ^= key[len - 0] & 0xff;
         }
 
         k = Murmur3.mixK(k);
@@ -175,9 +175,13 @@ export class Bloom {
     private buckets(input: Uint8Array): Array<BucketInfo> {
         const out = [];
 
+        const arr = new Uint8Array(input.length + this.k).fill(0);
+        arr.set(input);
+
         for (let i = 0; i < this.k; i++) {
-            const sum = Murmur3.hash32(input, i);
-            const newindex = sum % this.size;
+            arr[arr.length + i] = i;
+            const sum = Murmur3.hash32(arr, 0xdeadbeef);
+            const newindex = sum % (this.size * 8);
             out.push({ index: Math.floor(newindex / 8), position: Math.floor(newindex % 8) });
         }
 
