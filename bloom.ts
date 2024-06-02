@@ -175,12 +175,8 @@ export class Bloom {
     private buckets(input: Uint8Array): Array<BucketInfo> {
         const out = [];
 
-        const arr = new Uint8Array(input.length + this.k).fill(0);
-        arr.set(input);
-
         for (let i = 0; i < this.k; i++) {
-            arr[arr.length + i] = i;
-            const sum = Murmur3.hash32(arr, 0xdeadbeef);
+            const sum = Murmur3.hash32(input, i);
             const newindex = sum % (this.size * 8);
             out.push({ index: Math.floor(newindex / 8), position: Math.floor(newindex % 8) });
         }
