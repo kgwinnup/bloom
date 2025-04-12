@@ -125,7 +125,7 @@ export class Bloom {
     }
 
     /**
-     * dump will conver the entire bloom filter to a Uint8Array for storing. This will contain all information in
+     * dump will convert the entire bloom filter to a Uint8Array for storing. This will contain all information in
      * order to re-hydrate this bloom filter using the `from` static function.
      * @returns the byte representation of the bloom filter.
      */
@@ -168,7 +168,7 @@ export class Bloom {
     }
 
     /**
-     * buckets hashes k times and popuate those buckets that get hit
+     * buckets hashes k times and populate those buckets that get hit
      * @param input is the thing to be placed into the bloom filter
      * @return an array of which bucket and position the bit is in
      */
@@ -177,8 +177,8 @@ export class Bloom {
 
         for (let i = 0; i < this.k; i++) {
             const sum = Murmur3.hash32(input, i);
-            const newindex = sum % (this.size * 8);
-            out.push({ index: Math.floor(newindex / 8), position: Math.floor(newindex % 8) });
+            const newIndex = sum % (this.size * 8);
+            out.push({ index: Math.floor(newIndex / 8), position: Math.floor(newIndex % 8) });
         }
 
         return out;
